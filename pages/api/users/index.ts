@@ -1,16 +1,20 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { sampleUserData } from '../../../utils/sample-data'
+import { NextApiRequest, NextApiResponse } from 'next';
 
-const handler = (_req: NextApiRequest, res: NextApiResponse) => {
+import { sampleUserData } from '../../../utils/sample-data';
+
+const handler = (_request: NextApiRequest, response: NextApiResponse) => {
   try {
     if (!Array.isArray(sampleUserData)) {
-      throw new Error('Cannot find user data')
+      throw new TypeError('Cannot find user data');
     }
 
-    res.status(200).json(sampleUserData)
-  } catch (err) {
-    res.status(500).json({ statusCode: 500, message: err.message })
+    response.status(200).json(sampleUserData);
+  } catch (error: unknown) {
+    response.status(500).json({
+      statusCode: 500,
+      message: error instanceof Error ? error.message : String(error),
+    });
   }
-}
+};
 
-export default handler
+export default handler;

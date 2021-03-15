@@ -1,32 +1,34 @@
-import React, { ReactNode } from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
+import NextHead from 'next/head';
+import NextLink from 'next/link';
+import type { PropsWithChildren } from 'react';
 
 type Props = {
-  children?: ReactNode
-  title?: string
-}
+  title?: string;
+};
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
+const Layout = ({
+  children,
+  title = 'This is the default title',
+}: PropsWithChildren<Props>) => (
   <div>
-    <Head>
+    <NextHead>
       <title>{title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
+    </NextHead>
     <header>
       <nav>
-        <Link href="/">
+        <NextLink href="/">
           <a>Home</a>
-        </Link>{' '}
+        </NextLink>{' '}
         |{' '}
-        <Link href="/about">
+        <NextLink href="/about">
           <a>About</a>
-        </Link>{' '}
+        </NextLink>{' '}
         |{' '}
-        <Link href="/users">
+        <NextLink href="/users">
           <a>Users List</a>
-        </Link>{' '}
+        </NextLink>{' '}
         | <a href="/api/users">Users API</a>
       </nav>
     </header>
@@ -36,6 +38,6 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
       <span>I'm here to stay (Footer)</span>
     </footer>
   </div>
-)
+);
 
-export default Layout
+export default Layout;
