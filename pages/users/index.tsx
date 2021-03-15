@@ -1,10 +1,9 @@
+import Layout from 'components/layout';
+import List from 'components/list';
+import { User } from 'interfaces';
 import type { GetStaticProps, NextPage } from 'next';
 import NextLink from 'next/link';
-
-import Layout from '../../components/layout';
-import List from '../../components/list';
-import { User } from '../../interfaces';
-import { sampleUserData } from '../../utils/sample-data';
+import { sampleUserData } from 'utils/sample-data';
 
 type Props = {
   items: User[];
