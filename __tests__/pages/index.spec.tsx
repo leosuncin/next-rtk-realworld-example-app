@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import IndexPage from 'pages/index';
+
+import IndexPage from '@app/pages/index';
 
 describe('<IndexPage />', () => {
   it('should render', () => {

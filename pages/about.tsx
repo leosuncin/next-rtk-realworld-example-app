@@ -1,6 +1,7 @@
-import Layout from 'components/layout';
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
+
+import Layout from '@app/components/layout';
 
 const AboutPage: NextPage = () => (
   <Layout title="About | Next.js + TypeScript Example">

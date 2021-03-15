@@ -1,5 +1,6 @@
-import { User } from 'interfaces';
 import NextLink from 'next/link';
+
+import { User } from '@app/interfaces';
 
 type Props = {
   data: User;

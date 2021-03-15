@@ -1,5 +1,5 @@
-import ListItem from 'components/list-item';
-import { User } from 'interfaces';
+import ListItem from '@app/components/list-item';
+import { User } from '@app/interfaces';
 
 type Props = {
   items: User[];
