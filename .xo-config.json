@@ -1,0 +1,5 @@
+{
+  "space": true,
+  "prettier": true,
+  "envs": ["es2020", "node", "browser"]
+}
