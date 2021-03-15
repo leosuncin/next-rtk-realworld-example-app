@@ -1,0 +1,39 @@
+name: Continuos Integration
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Install dependencies 📦
+        uses: bahmutov/npm-install@v1
+      - name: Run XO 🧹
+        run: yarn lint
+      - name: Check types 🧩
+        run: yarn type-check
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Install dependencies 📦
+        uses: bahmutov/npm-install@v1
+      - name: Run unit tests 🧪
+        run: yarn test --coverage
+      - name: Monitor coverage 📫
+        if: "github.event_name == 'pull_request'"
+        uses: slavcodev/coverage-monitor-action@1.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clover_file: coverage/clover.xml
+          threshold_alert: 50
+          threshold_warning: 80
+      - name: Upload code coverage ⬆️
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-coverage
+          path: coverage
