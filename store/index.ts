@@ -1,4 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
+import {
+  TypedUseSelectorHook,
+  useDispatch as _useDispatch,
+  useSelector as _useSelector,
+} from 'react-redux';
 
 import articlesSlice, {
   ARTICLES_FEATURE_KEY,
@@ -18,5 +23,11 @@ const store = configureStore({
 export type AppState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
+
+export function useDispatch() {
+  return _useDispatch<AppDispatch>();
+}
+
+export const useSelector: TypedUseSelectorHook<AppState> = _useSelector;
 
 export default store;
