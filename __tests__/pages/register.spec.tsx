@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 import { constrains } from '@app/components/signup-form';
 import type { AuthResponse, ErrorResponse, Register } from '@app/interfaces';
 import RegisterPage from '@app/pages/register';
-import store from '@app/store';
+import { makeStore } from '@app/store';
 
 const register = Factory.Sync.makeFactory<Register>({
   username: Factory.each(() => faker.internet.userName()),
@@ -49,8 +49,31 @@ const registerHandler = rest.post<{ user: Register }>(
 const server = setupServer(registerHandler);
 
 describe('<RegisterPage />', () => {
+  const routerMocked: jest.Mocked<NextRouter> = {
+    pathname: '/register',
+    route: '/register',
+    isPreview: false,
+    query: {},
+    asPath: '/register',
+    basePath: '',
+    isFallback: false,
+    isReady: true,
+    isLocaleDomain: true,
+    events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
+    push: jest.fn(),
+    replace: jest.fn(),
+    reload: jest.fn(),
+    back: jest.fn(),
+    prefetch: jest.fn().mockResolvedValue(undefined),
+    beforePopState: jest.fn(),
+  };
+
   beforeAll(() => {
     server.listen();
+  });
+
+  afterEach(() => {
+    routerMocked.replace.mockReset();
   });
 
   afterAll(() => {
@@ -58,27 +81,9 @@ describe('<RegisterPage />', () => {
   });
 
   it('should render', () => {
-    const routerMocked: jest.Mocked<NextRouter> = {
-      pathname: '/register',
-      route: '/register',
-      isPreview: false,
-      query: {},
-      asPath: '/register',
-      basePath: '',
-      isFallback: false,
-      isReady: true,
-      isLocaleDomain: true,
-      events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-      push: jest.fn(),
-      replace: jest.fn(),
-      reload: jest.fn(),
-      back: jest.fn(),
-      prefetch: jest.fn().mockResolvedValue(undefined),
-      beforePopState: jest.fn(),
-    };
     const { baseElement } = render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <RegisterPage />
         </Provider>
       </RouterContext.Provider>,
@@ -90,30 +95,26 @@ describe('<RegisterPage />', () => {
     ).toBeInTheDocument();
   });
 
+  it('should redirect if already logged', () => {
+    const { token, ..._user } = user.build();
+
+    render(
+      <RouterContext.Provider value={routerMocked}>
+        <Provider store={makeStore({ auth: { token, user: _user } })}>
+          <RegisterPage />
+        </Provider>
+      </RouterContext.Provider>,
+    );
+
+    expect(routerMocked.replace).toHaveBeenCalledWith('/');
+  });
+
   it('should submit the form', async () => {
-    const routerMocked: jest.Mocked<NextRouter> = {
-      pathname: '/register',
-      route: '/register',
-      isPreview: false,
-      query: {},
-      asPath: '/register',
-      basePath: '',
-      isFallback: false,
-      isReady: true,
-      isLocaleDomain: true,
-      events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-      push: jest.fn(),
-      replace: jest.fn(),
-      reload: jest.fn(),
-      back: jest.fn(),
-      prefetch: jest.fn().mockResolvedValue(undefined),
-      beforePopState: jest.fn(),
-    };
     const data = register.build();
 
     render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <RegisterPage />
         </Provider>
       </RouterContext.Provider>,
@@ -136,28 +137,9 @@ describe('<RegisterPage />', () => {
   });
 
   it('should show the validation error messages', async () => {
-    const routerMocked: jest.Mocked<NextRouter> = {
-      pathname: '/register',
-      route: '/register',
-      isPreview: false,
-      query: {},
-      asPath: '/register',
-      basePath: '',
-      isFallback: false,
-      isReady: true,
-      isLocaleDomain: true,
-      events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-      push: jest.fn(),
-      replace: jest.fn(),
-      reload: jest.fn(),
-      back: jest.fn(),
-      prefetch: jest.fn().mockResolvedValue(undefined),
-      beforePopState: jest.fn(),
-    };
-
     render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <RegisterPage />
         </Provider>
       </RouterContext.Provider>,
@@ -198,29 +180,11 @@ describe('<RegisterPage />', () => {
   });
 
   it('should list the errors', async () => {
-    const routerMocked: jest.Mocked<NextRouter> = {
-      pathname: '/register',
-      route: '/register',
-      isPreview: false,
-      query: {},
-      asPath: '/register',
-      basePath: '',
-      isFallback: false,
-      isReady: true,
-      isLocaleDomain: true,
-      events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-      push: jest.fn(),
-      replace: jest.fn(),
-      reload: jest.fn(),
-      back: jest.fn(),
-      prefetch: jest.fn().mockResolvedValue(undefined),
-      beforePopState: jest.fn(),
-    };
     const data = register.build({ email: 'john@doe.me' });
 
     render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <RegisterPage />
         </Provider>
       </RouterContext.Provider>,
@@ -239,5 +203,6 @@ describe('<RegisterPage />', () => {
     });
 
     expect(screen.getByTestId('list-error-messages')).toBeInTheDocument();
+    expect(routerMocked.replace).not.toHaveBeenCalled();
   });
 });
