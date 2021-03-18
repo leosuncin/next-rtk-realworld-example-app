@@ -1,9 +1,26 @@
-import { DeepPartial, configureStore } from '@reduxjs/toolkit';
+import {
+  DeepPartial,
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
   useDispatch as _useDispatch,
   useSelector as _useSelector,
 } from 'react-redux';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  PersistConfig,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 import articlesSlice, {
   ARTICLES_FEATURE_KEY,
@@ -24,19 +41,38 @@ type PreloadedState = DeepPartial<{
   [AUTH_FEATURE_KEY]: AuthState;
 }>;
 
+const persistConfig: PersistConfig<{
+  [ARTICLES_FEATURE_KEY]: ArticlesState;
+  [TAGS_FEATURE_KEY]: TagsState;
+  [AUTH_FEATURE_KEY]: AuthState;
+}> = {
+  storage,
+  key: 'realworld',
+  whitelist: [AUTH_FEATURE_KEY],
+};
+
 export function makeStore(preloadedState?: PreloadedState) {
+  const rootReducer = combineReducers({
+    [ARTICLES_FEATURE_KEY]: articlesSlice,
+    [TAGS_FEATURE_KEY]: tagsSlice,
+    [AUTH_FEATURE_KEY]: authSlice,
+  });
+
   return configureStore({
     devTools: true,
-    reducer: {
-      [ARTICLES_FEATURE_KEY]: articlesSlice,
-      [TAGS_FEATURE_KEY]: tagsSlice,
-      [AUTH_FEATURE_KEY]: authSlice,
-    },
+    reducer: persistReducer(persistConfig, rootReducer),
     preloadedState,
+    middleware: getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
   });
 }
 
 const store = makeStore();
+
+export const persistor = persistStore(store);
 
 export type AppState = ReturnType<typeof store.getState>;
 
