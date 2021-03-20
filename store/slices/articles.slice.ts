@@ -14,6 +14,7 @@ import type {
 } from '@app/interfaces';
 import { Status } from '@app/interfaces/status.enum';
 import type { AppState } from '@app/store';
+import { clearErrors } from '@app/store/shared.actions';
 import { limit } from '@app/utils/limit';
 
 export const ARTICLES_FEATURE_KEY = 'articles' as const;
@@ -95,6 +96,10 @@ const articlesSlice = createSlice({
       if (action.meta.rejectedWithValue) {
         state.errors = action.payload;
       }
+    });
+
+    builder.addCase(clearErrors, (state) => {
+      delete state.errors;
     });
   },
 });

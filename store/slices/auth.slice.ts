@@ -9,6 +9,7 @@ import type {
 } from '@app/interfaces';
 import { Status } from '@app/interfaces/status.enum';
 import type { AppState } from '@app/store';
+import { clearErrors } from '@app/store/shared.actions';
 
 export interface AuthState {
   user?: User;
@@ -151,6 +152,10 @@ const authSlice = createSlice<AuthState, any, typeof AUTH_FEATURE_KEY>({
     builder.addCase(login.pending, buildLoadingState);
     builder.addCase(login.fulfilled, buildSuccessState);
     builder.addCase(login.rejected, buildErrorState);
+
+    builder.addCase(clearErrors, (state) => {
+      delete state.errors;
+    });
   },
 });
 
