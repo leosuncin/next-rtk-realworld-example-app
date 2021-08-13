@@ -6,17 +6,22 @@ import { useEffect } from 'react';
 import Layout from '@app/components/layout';
 import ListError from '@app/components/list-error';
 import SignUpForm from '@app/components/signup-form';
+import {
+  register,
+  selectErrors,
+  selectIsAuthenticated,
+} from '@app/features/auth/auth.slice';
 import { useDispatch, useSelector } from '@app/store';
-import { register, selectAuthState } from '@app/store/slices/auth.slice';
 
 const RegisterPage: NextPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { errors, user } = useSelector(selectAuthState);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const errors = useSelector(selectErrors);
 
   useEffect(() => {
-    if (user && !errors) void router.replace('/');
-  }, [user]);
+    if (isAuthenticated) void router.replace('/');
+  }, [isAuthenticated]);
 
   return (
     <Layout>

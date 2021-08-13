@@ -1,8 +1,8 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
+import { selectUser } from '@app/features/auth/auth.slice';
 import { useSelector } from '@app/store';
-import { selectUser } from '@app/store/slices/auth.slice';
 
 interface NavbarRoute {
   path: string;

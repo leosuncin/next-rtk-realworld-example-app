@@ -8,8 +8,9 @@ import { RouterContext } from 'next/dist/next-server/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
+import type { ApiError } from '@app/common/types';
 import { constrains } from '@app/components/signup-form';
-import type { AuthResponse, ErrorResponse, Register } from '@app/interfaces';
+import type { AuthResponse, Register } from '@app/features/auth/auth-api';
 import RegisterPage from '@app/pages/register';
 import { makeStore } from '@app/store';
 
@@ -19,7 +20,7 @@ const register = Factory.Sync.makeFactory<Register>({
   password: Factory.each(() => faker.internet.password()),
 });
 const user = Factory.Sync.makeFactory<AuthResponse['user']>({
-  bio: null,
+  bio: Factory.each(() => faker.hacker.phrase()),
   image: 'https://static.productionready.io/images/smiley-cyrus.jpg',
   token: Factory.each(() => faker.random.uuid()),
   username: Factory.each(() => faker.internet.userName()),
@@ -35,7 +36,7 @@ const registerHandler = rest.post<{ user: Register }>(
           errors: {
             email: ['has already been taken'],
           },
-        } as ErrorResponse),
+        } as ApiError),
       );
 
     return response(

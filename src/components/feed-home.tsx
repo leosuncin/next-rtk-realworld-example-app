@@ -1,7 +1,7 @@
 import { MouseEventHandler, useState } from 'react';
 
+import { selectUser } from '@app/features/auth/auth.slice';
 import { useSelector } from '@app/store';
-import { selectUser } from '@app/store/slices/auth.slice';
 
 type Feed = 'global' | 'personal';
 

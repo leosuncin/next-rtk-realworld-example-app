@@ -6,17 +6,22 @@ import { useEffect } from 'react';
 import Layout from '@app/components/layout';
 import ListError from '@app/components/list-error';
 import SignInForm from '@app/components/signin-form';
+import {
+  login,
+  selectErrors,
+  selectIsAuthenticated,
+} from '@app/features/auth/auth.slice';
 import { useDispatch, useSelector } from '@app/store';
-import { login, selectAuthState } from '@app/store/slices/auth.slice';
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { errors, user } = useSelector(selectAuthState);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const errors = useSelector(selectErrors);
 
   useEffect(() => {
-    if (user) void router.replace('/');
-  }, [user]);
+    if (!isAuthenticated) void router.replace('/');
+  }, [isAuthenticated]);
 
   return (
     <Layout>

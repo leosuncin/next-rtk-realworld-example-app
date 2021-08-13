@@ -22,40 +22,31 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import articlesSlice, {
-  ARTICLES_FEATURE_KEY,
-  ArticlesState,
-} from '@app/store/slices/articles.slice';
-import authSlice, {
-  AUTH_FEATURE_KEY,
-  AuthState,
-} from '@app/store/slices/auth.slice';
-import tagsSlice, {
-  TAGS_FEATURE_KEY,
-  TagsState,
-} from '@app/store/slices/tags.slice';
+import authSlice, { AuthState } from '@app/features/auth/auth.slice';
+import articlesSlice, { ArticlesState } from '@app/store/slices/articles.slice';
+import tagsSlice, { TagsState } from '@app/store/slices/tags.slice';
 
 type PreloadedState = DeepPartial<{
-  [ARTICLES_FEATURE_KEY]: ArticlesState;
-  [TAGS_FEATURE_KEY]: TagsState;
-  [AUTH_FEATURE_KEY]: AuthState;
+  articles: ArticlesState;
+  tags: TagsState;
+  auth: AuthState;
 }>;
 
 const persistConfig: PersistConfig<{
-  [ARTICLES_FEATURE_KEY]: ArticlesState;
-  [TAGS_FEATURE_KEY]: TagsState;
-  [AUTH_FEATURE_KEY]: AuthState;
+  articles: ArticlesState;
+  tags: TagsState;
+  auth: AuthState;
 }> = {
   storage,
   key: 'realworld',
-  whitelist: [AUTH_FEATURE_KEY],
+  whitelist: ['auth'],
 };
 
 export function makeStore(preloadedState?: PreloadedState) {
   const rootReducer = combineReducers({
-    [ARTICLES_FEATURE_KEY]: articlesSlice,
-    [TAGS_FEATURE_KEY]: tagsSlice,
-    [AUTH_FEATURE_KEY]: authSlice,
+    articles: articlesSlice,
+    tags: tagsSlice,
+    auth: authSlice,
   });
 
   return configureStore({
