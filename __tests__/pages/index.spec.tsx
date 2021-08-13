@@ -11,7 +11,11 @@ import { RouterContext } from 'next/dist/next-server/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
-import type { Article, ArticlesResponse, TagsResponse } from '@app/interfaces';
+import type {
+  Article,
+  ArticlesResponse,
+} from '@app/features/articles/articles-api';
+import type { TagsResponse } from '@app/interfaces';
 import IndexPage from '@app/pages/index';
 import store from '@app/store';
 
@@ -22,7 +26,6 @@ const authorFactory = Factory.Sync.makeFactory<Article['author']>({
   username: Factory.Sync.each(() => faker.internet.userName()),
 });
 const articleFactory = Factory.Sync.makeFactory<Article>({
-  id: Factory.each((i) => i),
   title: Factory.each((i) => `Article title ${i}`),
   slug: '',
   body: Factory.each(() => faker.lorem.paragraph()),

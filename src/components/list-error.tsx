@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
-import type { ErrorResponse } from '@app/interfaces';
+import type { ApiError } from '@app/common/types';
 import { useDispatch } from '@app/store';
 import { clearErrors } from '@app/store/shared.actions';
 
 export interface ListErrorProps {
-  error?: ErrorResponse['errors'];
+  error?: ApiError['errors'];
 }
 
 function ListError({ error }: ListErrorProps) {

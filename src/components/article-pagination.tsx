@@ -2,11 +2,11 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-import { useDispatch, useSelector } from '@app/store';
 import {
-  fetchAll,
+  getAllArticles,
   selectArticlesCount,
-} from '@app/store/slices/articles.slice';
+} from '@app/features/articles/articles.slice';
+import { useDispatch, useSelector } from '@app/store';
 import { getCurrentPage } from '@app/utils/query';
 
 function ArticlePagination() {
@@ -16,7 +16,7 @@ function ArticlePagination() {
   const currentPage = getCurrentPage(router.query);
 
   useEffect(() => {
-    const promise = dispatch(fetchAll({ page: currentPage }));
+    const promise = dispatch(getAllArticles({ page: currentPage }));
 
     return () => {
       promise.abort();

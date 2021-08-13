@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import type { NextPage } from 'next';
 
 import ArticlePagination from '@app/components/article-pagination';
 import ArticlePreview from '@app/components/article-preview';
@@ -6,15 +6,12 @@ import Banner from '@app/components/banner';
 import FeedHome from '@app/components/feed-home';
 import Layout from '@app/components/layout';
 import Sidebar from '@app/components/sidebar';
-import type { Article } from '@app/interfaces';
+import type { Article } from '@app/features/articles/articles-api';
+import { selectAllArticles } from '@app/features/articles/articles.slice';
 import { useSelector } from '@app/store';
-import { selectArticles } from '@app/store/slices/articles.slice';
-import { getCurrentPage } from '@app/utils/query';
 
-function Home() {
-  const router = useRouter();
-  const page = getCurrentPage(router.query);
-  const articles: Article[] = useSelector(selectArticles({ page }));
+const Home: NextPage = () => {
+  const articles: Article[] = useSelector(selectAllArticles);
 
   return (
     <Layout>
@@ -43,6 +40,6 @@ function Home() {
       </div>
     </Layout>
   );
-}
+};
 
 export default Home;

@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 
-import type { Article } from '@app/interfaces';
+import type { Article } from '@app/features/articles/articles-api';
 
 export interface ArticlePreviewProps {
   article: Article;

@@ -22,8 +22,10 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import articlesSlice, {
+  ArticlesState,
+} from '@app/features/articles/articles.slice';
 import authSlice, { AuthState } from '@app/features/auth/auth.slice';
-import articlesSlice, { ArticlesState } from '@app/store/slices/articles.slice';
 import tagsSlice, { TagsState } from '@app/store/slices/tags.slice';
 
 type PreloadedState = DeepPartial<{
