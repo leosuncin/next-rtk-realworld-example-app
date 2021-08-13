@@ -15,7 +15,7 @@ import type {
   Article,
   ArticlesResponse,
 } from '@app/features/articles/articles-api';
-import type { TagsResponse } from '@app/interfaces';
+import type { TagsResponse } from '@app/features/tags/tags-api';
 import IndexPage from '@app/pages/index';
 import store from '@app/store';
 

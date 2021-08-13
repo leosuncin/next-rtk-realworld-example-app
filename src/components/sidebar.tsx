@@ -1,8 +1,8 @@
 import NextLink from 'next/link';
 import { useEffect } from 'react';
 
+import { getAllTags, selectTags } from '@app/features/tags/tags.slice';
 import { useDispatch, useSelector } from '@app/store';
-import { fetchAll, selectTags } from '@app/store/slices/tags.slice';
 
 interface TagPillProps {
   tag: string;
@@ -21,7 +21,7 @@ function Sidebar() {
   const tags = useSelector(selectTags);
 
   useEffect(() => {
-    const promise = dispatch(fetchAll());
+    const promise = dispatch(getAllTags());
 
     return () => {
       promise.abort();

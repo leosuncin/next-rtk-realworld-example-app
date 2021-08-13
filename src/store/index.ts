@@ -26,7 +26,7 @@ import articlesSlice, {
   ArticlesState,
 } from '@app/features/articles/articles.slice';
 import authSlice, { AuthState } from '@app/features/auth/auth.slice';
-import tagsSlice, { TagsState } from '@app/store/slices/tags.slice';
+import tagsSlice, { TagsState } from '@app/features/tags/tags.slice';
 
 type PreloadedState = DeepPartial<{
   articles: ArticlesState;
