@@ -9,8 +9,8 @@ import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
 import type { ApiError } from '@app/common/types';
-import { constrains } from '@app/components/signin-form';
 import type { AuthResponse, Login } from '@app/features/auth/auth-api';
+import { constrains } from '@app/features/auth/signin-form';
 import LoginPage from '@app/pages/login';
 import { makeStore } from '@app/store';
 

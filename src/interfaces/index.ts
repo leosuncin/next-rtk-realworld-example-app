@@ -1,9 +1,4 @@
-export interface User {
-  email: string;
-  username: string;
-  bio: string | null;
-  image: string | null;
-}
+import type { User } from '@app/features/auth/auth-api';
 
 interface Author extends Omit<User, 'email'> {
   following: boolean;
@@ -29,20 +24,6 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
   author: Author;
-}
-export interface Register {
-  email: string;
-  password: string;
-  username: string;
-}
-
-export interface Login {
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  user: User & { token: string };
 }
 
 export interface ErrorResponse {
