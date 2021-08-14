@@ -1,4 +1,4 @@
-import { RegisterOptions, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import type { Register } from '@app/features/auth/auth-api';
 
@@ -6,7 +6,7 @@ export interface SignUpFormProps {
   onRegisterUser: (payload: Register) => Promise<unknown>;
 }
 
-export const constrains: Record<keyof Register, RegisterOptions> = {
+export const constrains = {
   username: {
     required: "Username can't be blank",
     minLength: {
@@ -21,8 +21,12 @@ export const constrains: Record<keyof Register, RegisterOptions> = {
   password: {
     required: "Password can't be blank",
     minLength: {
-      message: 'Password is too short (minimum is 5 character)',
-      value: 5,
+      message: 'Password is too short (minimum is 8 character)',
+      value: 8,
+    },
+    maxLength: {
+      message: 'Password is too long (maximum is 72 character)',
+      value: 72,
     },
   },
   email: {
@@ -35,16 +39,16 @@ export const constrains: Record<keyof Register, RegisterOptions> = {
 };
 
 function SignUpForm({ onRegisterUser }: SignUpFormProps) {
-  const { handleSubmit, register, errors } = useForm<Register>();
+  const { handleSubmit, register, errors, formState } = useForm<Register>();
 
   return (
     <form onSubmit={handleSubmit(async (payload) => onRegisterUser(payload))}>
-      <fieldset>
+      <fieldset disabled={formState.isSubmitting}>
         <div className="form-group">
           <input
             className="form-control form-control-lg"
             type="text"
-            placeholder="Your Name"
+            placeholder="Username"
             name="username"
             ref={register(constrains.username)}
           />
