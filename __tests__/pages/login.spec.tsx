@@ -116,10 +116,10 @@ describe('<LoginPage />', () => {
     userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await expect(
-      screen.findByText(constrains.email.required as string),
+      screen.findByText(constrains.email.required),
     ).resolves.toBeInTheDocument();
     await expect(
-      screen.findByText(constrains.password.required as string),
+      screen.findByText(constrains.password.required),
     ).resolves.toBeInTheDocument();
 
     userEvent.type(screen.getByPlaceholderText(/email/i), faker.music.genre());
