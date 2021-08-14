@@ -11,16 +11,16 @@ function ArticlePreview({ article }: ArticlePreviewProps) {
     <article className="article-preview">
       <div className="article-meta">
         <NextLink href={`/@${article.author.username}`}>
-          {article.author.image && <img src={article.author.image} />}
+          <img src={article.author.image} />
         </NextLink>
 
         <div className="info">
           <NextLink href={`/@${article.author.username}`}>
             <a className="author">{article.author.username}</a>
           </NextLink>
-          <span className="date">
+          <time className="date" dateTime={article.createdAt}>
             {new Date(article.createdAt).toDateString()}
-          </span>
+          </time>
         </div>
 
         <div className="pull-xs-right">
@@ -39,7 +39,7 @@ function ArticlePreview({ article }: ArticlePreviewProps) {
       <NextLink href={`/article/${article.slug}`}>
         <a className="preview-link">
           <h1>{article.title}</h1>
-          <p>{article.body}</p>
+          <p>{article.description}</p>
           <span>Read more...</span>
           <ul className="tag-list">
             {article.tagList.map((tag) => (

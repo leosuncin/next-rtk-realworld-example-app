@@ -1,5 +1,6 @@
 import {
   EntityState,
+  Selector,
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
@@ -10,12 +11,15 @@ import * as articlesApi from '@app/features/articles/articles-api';
 import type { AppState } from '@app/store';
 import { clearErrors } from '@app/store/shared.actions';
 
+export type Tab = 'feed' | 'all';
+
 export interface ArticlesState
   extends EntityState<articlesApi.Article>,
     SliceState {
   articlesCount: number;
   currentPage: number;
   articlesPerPage: number;
+  tab?: Tab;
 }
 
 const articlesAdapter = createEntityAdapter<articlesApi.Article>({
@@ -86,5 +90,9 @@ export function selectCurrentPage(state: AppState): number {
 export function selectArticlesPerPage(state: AppState): number {
   return selectArticlesSlice(state).articlesPerPage;
 }
+
+export const selectIsActiveTab = (tab: Tab): Selector<AppState, boolean> => (
+  state,
+) => selectArticlesSlice(state).tab === tab;
 
 export default articlesSlice.reducer;
