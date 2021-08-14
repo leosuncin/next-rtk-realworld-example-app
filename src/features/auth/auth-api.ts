@@ -46,14 +46,14 @@ export const register: AsyncThunkPayloadCreator<
   });
 
   if (response.status === 422) {
-    const errors: ApiError = await response.json();
+    const errors = (await response.json()) as ApiError;
 
     return thunkApi.rejectWithValue(errors);
   }
 
   const {
     user: { token, ...user },
-  }: AuthResponse = await response.json();
+  } = (await response.json()) as AuthResponse;
 
   return { token, user };
 };
@@ -76,14 +76,14 @@ export const login: AsyncThunkPayloadCreator<
   );
 
   if (response.status === 422) {
-    const errors: ApiError = await response.json();
+    const errors = (await response.json()) as ApiError;
 
     return thunkApi.rejectWithValue(errors);
   }
 
   const {
     user: { token, ...user },
-  }: AuthResponse = await response.json();
+  } = (await response.json()) as AuthResponse;
 
   return { token, user };
 };

@@ -1,4 +1,4 @@
-import type { ParsedUrlQuery } from 'querystring';
+import type { ParsedUrlQuery } from 'node:querystring';
 
 import type { Draft } from '@reduxjs/toolkit';
 
@@ -19,5 +19,7 @@ export function failureReducer<State extends SliceState>(
 export function getCurrentPage(query: ParsedUrlQuery): number {
   const page = Array.isArray(query.page) ? query.page[0] : query.page;
 
-  return Number.parseInt(page, 10) ?? 0;
+  if (!page) return 1;
+
+  return Number.parseInt(page, 10) ?? 1;
 }

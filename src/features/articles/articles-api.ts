@@ -69,7 +69,7 @@ export const getAll: AsyncThunkPayloadCreator<
     }/articles?${searchParameters.toString()}`,
     { signal: thunkApi.signal },
   );
-  const json: ArticlesResponse = await response.json();
+  const json = (await response.json()) as ArticlesResponse;
 
   return json;
 };

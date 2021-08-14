@@ -25,7 +25,7 @@ export type ThunkApiConfig<
     pendingMeta?: unknown;
     fulfilledMeta?: unknown;
     rejectedMeta?: unknown;
-  } = Record<string, unknown>
+  } = Record<string, unknown>,
 > = {
   state: AppState;
   dispatch: AppDispatch;
@@ -41,7 +41,7 @@ type MyAsyncThunk<
     pendingMeta?: unknown;
     fulfilledMeta?: unknown;
     rejectedMeta?: unknown;
-  } = Record<string, unknown>
+  } = Record<string, unknown>,
 > = AsyncThunk<Payload, Argument, ThunkApiConfig<Meta>>;
 
 export type PendingAction<
@@ -50,7 +50,7 @@ export type PendingAction<
     pendingMeta?: unknown;
     fulfilledMeta?: unknown;
     rejectedMeta?: unknown;
-  } = Record<string, unknown>
+  } = Record<string, unknown>,
 > = ReturnType<MyAsyncThunk<undefined, Argument, Meta>['pending']>;
 
 export type FulfilledAction<
@@ -60,7 +60,7 @@ export type FulfilledAction<
     pendingMeta?: unknown;
     fulfilledMeta?: unknown;
     rejectedMeta?: unknown;
-  } = Record<string, unknown>
+  } = Record<string, unknown>,
 > = ReturnType<MyAsyncThunk<Payload, Argument, Meta>['fulfilled']>;
 
 export type RejectedAction<
@@ -69,5 +69,5 @@ export type RejectedAction<
     pendingMeta?: unknown;
     fulfilledMeta?: unknown;
     rejectedMeta: ApiError;
-  } = { rejectedMeta: ApiError }
+  } = { rejectedMeta: ApiError },
 > = ReturnType<MyAsyncThunk<undefined, Argument, Meta>['rejected']>;

@@ -7,7 +7,7 @@ import * as Factory from 'factory.ts';
 import * as faker from 'faker';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { RouterContext } from 'next/dist/next-server/lib/router-context';
+import { RouterContext } from 'next/dist/shared/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
@@ -53,7 +53,7 @@ const tagsHandler = rest.get<never, TagsResponse>(
   `${process.env.NEXT_PUBLIC_API_ROOT}/tags`,
   (_, response, context) => {
     const tags = [
-      ...new Set(articles.map((article) => article.tagList).flat()),
+      ...new Set(articles.flatMap((article) => article.tagList)),
     ].slice(0, 10);
     return response(
       context.status(200),

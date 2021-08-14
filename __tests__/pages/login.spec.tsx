@@ -2,10 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import faker from 'faker';
 import { setupServer } from 'msw/node';
-import { RouterContext } from 'next/dist/next-server/lib/router-context';
+import { RouterContext } from 'next/dist/shared/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
+import { Status } from '@app/common/types';
 import {
   loginFactory,
   loginHandler,
@@ -66,10 +67,11 @@ describe('<LoginPage />', () => {
 
   it('should redirect if already logged', () => {
     const { token, ...user } = userFactory.build();
+    const store = makeStore({ auth: { status: Status.SUCCESS, token, user } });
 
     render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore({ auth: { token, user } })}>
+        <Provider store={store}>
           <LoginPage />
         </Provider>
       </RouterContext.Provider>,
@@ -130,10 +132,10 @@ describe('<LoginPage />', () => {
     userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await expect(
-      screen.findByText((constrains.email.pattern as any).message),
+      screen.findByText(constrains.email.pattern.message),
     ).resolves.toBeInTheDocument();
     await expect(
-      screen.findByText((constrains.password.minLength as any).message),
+      screen.findByText(constrains.password.minLength.message),
     ).resolves.toBeInTheDocument();
   });
 

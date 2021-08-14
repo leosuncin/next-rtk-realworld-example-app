@@ -22,7 +22,7 @@ export const loginFactory = Factory.Sync.makeFactory<Login>({
 export const userFactory = Factory.Sync.makeFactory<AuthResponse['user']>({
   bio: Factory.each(() => faker.hacker.phrase()),
   image: Factory.each(() => faker.internet.avatar()),
-  token: Factory.each(() => faker.random.uuid()),
+  token: Factory.each(() => faker.datatype.uuid()),
   username: Factory.each(() => faker.internet.userName()),
   email: Factory.each(() => faker.internet.exampleEmail()),
 });

@@ -14,7 +14,7 @@ export const getAll: AsyncThunkPayloadCreator<
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/tags`, {
     signal: thunkApi.signal,
   });
-  const { tags }: TagsResponse = await response.json();
+  const { tags } = (await response.json()) as TagsResponse;
 
   return tags;
 };

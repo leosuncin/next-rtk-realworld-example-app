@@ -11,7 +11,8 @@ export const constrains = {
     required: "Email can't be blank",
     pattern: {
       message: 'Email is not a valid e-mail address',
-      value: /^[\w.!#$%&'*+\\/=?^`{|}~-]+@[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?(?:\.[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?)*$/,
+      value:
+        /^[\w.!#$%&'*+\\/=?^`{|}~-]+@[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?(?:\.[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?)*$/,
     },
   },
   password: {
@@ -28,7 +29,7 @@ export const constrains = {
 };
 
 function SignInForm({ onLoginUser }: SignInFormProps) {
-  const { handleSubmit, register, errors, formState } = useForm<Login>();
+  const { handleSubmit, register, formState } = useForm<Login>();
 
   return (
     <form onSubmit={handleSubmit(async (payload) => onLoginUser(payload))}>
@@ -38,11 +39,12 @@ function SignInForm({ onLoginUser }: SignInFormProps) {
             className="form-control form-control-lg"
             type="email"
             placeholder="Email"
-            name="email"
-            ref={register(constrains.email)}
+            {...register('email', constrains.email)}
           />
-          {errors.email ? (
-            <small className="text-danger">{errors.email.message}</small>
+          {formState.errors.email ? (
+            <small className="text-danger">
+              {formState.errors.email.message}
+            </small>
           ) : null}
         </div>
 
@@ -51,11 +53,12 @@ function SignInForm({ onLoginUser }: SignInFormProps) {
             className="form-control form-control-lg"
             type="password"
             placeholder="Password"
-            name="password"
-            ref={register(constrains.password)}
+            {...register('password', constrains.password)}
           />
-          {errors.password ? (
-            <small className="text-danger">{errors.password.message}</small>
+          {formState.errors.password ? (
+            <small className="text-danger">
+              {formState.errors.password.message}
+            </small>
           ) : null}
         </div>
 

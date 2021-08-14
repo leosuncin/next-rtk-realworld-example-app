@@ -91,8 +91,9 @@ export function selectArticlesPerPage(state: AppState): number {
   return selectArticlesSlice(state).articlesPerPage;
 }
 
-export const selectIsActiveTab = (tab: Tab): Selector<AppState, boolean> => (
-  state,
-) => selectArticlesSlice(state).tab === tab;
+export const selectIsActiveTab =
+  (tab: Tab): Selector<AppState, boolean> =>
+  (state) =>
+    selectArticlesSlice(state).tab === tab;
 
 export default articlesSlice.reducer;

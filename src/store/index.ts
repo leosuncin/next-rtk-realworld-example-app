@@ -1,8 +1,8 @@
 import {
-  DeepPartial,
+  CombinedState,
+  PreloadedState,
   combineReducers,
   configureStore,
-  getDefaultMiddleware,
 } from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
@@ -28,23 +28,21 @@ import articlesSlice, {
 import authSlice, { AuthState } from '@app/features/auth/auth.slice';
 import tagsSlice, { TagsState } from '@app/features/tags/tags.slice';
 
-type PreloadedState = DeepPartial<{
+export type AppState = {
   articles: ArticlesState;
   tags: TagsState;
   auth: AuthState;
-}>;
+};
 
-const persistConfig: PersistConfig<{
-  articles: ArticlesState;
-  tags: TagsState;
-  auth: AuthState;
-}> = {
+const persistConfig: PersistConfig<AppState> = {
   storage,
   key: 'realworld',
   whitelist: ['auth'],
 };
 
-export function makeStore(preloadedState?: PreloadedState) {
+export function makeStore(
+  preloadedState?: PreloadedState<CombinedState<AppState>>,
+) {
   const rootReducer = combineReducers({
     articles: articlesSlice,
     tags: tagsSlice,
@@ -55,19 +53,18 @@ export function makeStore(preloadedState?: PreloadedState) {
     devTools: true,
     reducer: persistReducer(persistConfig, rootReducer),
     preloadedState,
-    middleware: getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
   });
 }
 
 const store = makeStore();
 
 export const persistor = persistStore(store);
-
-export type AppState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 
