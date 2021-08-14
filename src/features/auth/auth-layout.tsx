@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect } from 'react';
 
-import ListError from '@app/components/list-error';
+import ListErrors from '@app/common/list-errors';
 import {
   selectErrors,
   selectIsAuthenticated,
@@ -43,7 +43,7 @@ function AuthLayout({
               )}
             </p>
 
-            <ListError error={errors} />
+            <ListErrors errors={errors} />
 
             {children}
           </main>
