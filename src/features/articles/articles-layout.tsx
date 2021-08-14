@@ -1,8 +1,8 @@
-import Sidebar from '@app/components/sidebar';
 import ArticleList from '@app/features/articles/article-list';
 import Banner from '@app/features/articles/banner';
 import FeedTabs, { FeedTabsProps } from '@app/features/articles/feed-tabs';
 import { selectIsAuthenticated } from '@app/features/auth/auth.slice';
+import TagsSidebar from '@app/features/tags/tags-sidebar';
 import { useSelector } from '@app/store';
 
 const ArticlesLayout = ({ tab, tag }: FeedTabsProps) => {
@@ -21,7 +21,7 @@ const ArticlesLayout = ({ tab, tag }: FeedTabsProps) => {
           </div>
 
           <div className="col-md-3">
-            <Sidebar />
+            <TagsSidebar />
           </div>
         </div>
       </main>

@@ -1,12 +1,16 @@
 import NextLink from 'next/link';
 import { useEffect } from 'react';
 
-import { getAllTags, selectTags } from '@app/features/tags/tags.slice';
+import {
+  getAllTags,
+  selectIsLoading,
+  selectTags,
+} from '@app/features/tags/tags.slice';
 import { useDispatch, useSelector } from '@app/store';
 
-interface TagPillProps {
+type TagPillProps = {
   tag: string;
-}
+};
 
 function TagPill({ tag }: TagPillProps) {
   return (
@@ -16,31 +20,32 @@ function TagPill({ tag }: TagPillProps) {
   );
 }
 
-function Sidebar() {
+function TagsSidebar() {
   const dispatch = useDispatch();
   const tags = useSelector(selectTags);
+  const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
-    const promise = dispatch(getAllTags());
+    const fetchTags = dispatch(getAllTags());
 
     return () => {
-      promise.abort();
+      fetchTags.abort();
     };
-  });
+  }, [dispatch]);
 
   return (
     <div className="sidebar">
       <p>Popular Tags</p>
 
       <div className="tag-list">
-        {tags.length === 0 ? (
-          <div>Loading tags...</div>
+        {isLoading ? (
+          <p>Loading Tags...</p>
         ) : (
-          tags.map((tag) => <TagPill key={tag} tag={tag} />)
+          tags.map((tag) => <TagPill tag={tag} key={tag} />)
         )}
       </div>
     </div>
   );
 }
 
-export default Sidebar;
+export default TagsSidebar;
