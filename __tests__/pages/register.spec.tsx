@@ -1,52 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as Factory from 'factory.ts';
-import * as faker from 'faker';
-import { rest } from 'msw';
+import faker from 'faker';
 import { setupServer } from 'msw/node';
 import { RouterContext } from 'next/dist/next-server/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
-import type { ApiError } from '@app/common/types';
-import type { AuthResponse, Register } from '@app/features/auth/auth-api';
+import {
+  registerFactory,
+  registerHandler,
+  userFactory,
+} from '@app/features/auth/auth-mocks';
 import { constrains } from '@app/features/auth/signup-form';
 import RegisterPage from '@app/pages/register';
 import { makeStore } from '@app/store';
 
-const register = Factory.Sync.makeFactory<Register>({
-  username: Factory.each(() => faker.internet.userName()),
-  email: Factory.each(() => faker.internet.exampleEmail()),
-  password: Factory.each(() => faker.internet.password()),
-});
-const user = Factory.Sync.makeFactory<AuthResponse['user']>({
-  bio: Factory.each(() => faker.hacker.phrase()),
-  image: 'https://static.productionready.io/images/smiley-cyrus.jpg',
-  token: Factory.each(() => faker.random.uuid()),
-  username: Factory.each(() => faker.internet.userName()),
-  email: Factory.each(() => faker.internet.exampleEmail()),
-});
-const registerHandler = rest.post<{ user: Register }>(
-  `${process.env.NEXT_PUBLIC_API_ROOT}/users`,
-  (request, response, context) => {
-    if (request.body.user.email === 'john@doe.me')
-      return response(
-        context.status(422),
-        context.json({
-          errors: {
-            email: ['has already been taken'],
-          },
-        } as ApiError),
-      );
-
-    return response(
-      context.status(200),
-      context.json({
-        user: user.build(request.body.user),
-      } as AuthResponse),
-    );
-  },
-);
 const server = setupServer(registerHandler);
 
 describe('<RegisterPage />', () => {
@@ -97,7 +65,7 @@ describe('<RegisterPage />', () => {
   });
 
   it('should redirect if already logged', () => {
-    const { token, ..._user } = user.build();
+    const { token, ..._user } = userFactory.build();
 
     render(
       <RouterContext.Provider value={routerMocked}>
@@ -111,7 +79,7 @@ describe('<RegisterPage />', () => {
   });
 
   it('should submit the form', async () => {
-    const data = register.build();
+    const data = registerFactory.build();
 
     render(
       <RouterContext.Provider value={routerMocked}>
@@ -181,7 +149,7 @@ describe('<RegisterPage />', () => {
   });
 
   it('should list the errors', async () => {
-    const data = register.build({ email: 'john@doe.me' });
+    const data = registerFactory.build({ email: 'john@doe.me' });
 
     render(
       <RouterContext.Provider value={routerMocked}>

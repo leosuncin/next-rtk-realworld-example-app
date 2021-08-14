@@ -1,51 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as Factory from 'factory.ts';
-import * as faker from 'faker';
-import { rest } from 'msw';
+import faker from 'faker';
 import { setupServer } from 'msw/node';
 import { RouterContext } from 'next/dist/next-server/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
-import type { ApiError } from '@app/common/types';
-import type { AuthResponse, Login } from '@app/features/auth/auth-api';
+import {
+  loginFactory,
+  loginHandler,
+  userFactory,
+} from '@app/features/auth/auth-mocks';
 import { constrains } from '@app/features/auth/signin-form';
 import LoginPage from '@app/pages/login';
 import { makeStore } from '@app/store';
 
-const loginFactory = Factory.Sync.makeFactory<Login>({
-  email: Factory.each(() => faker.internet.exampleEmail()),
-  password: Factory.each(() => faker.internet.password()),
-});
-const userFactory = Factory.Sync.makeFactory<AuthResponse['user']>({
-  bio: Factory.each(() => faker.hacker.phrase()),
-  image: 'https://static.productionready.io/images/smiley-cyrus.jpg',
-  token: Factory.each(() => faker.random.uuid()),
-  username: Factory.each(() => faker.internet.userName()),
-  email: Factory.each(() => faker.internet.exampleEmail()),
-});
-const loginHandler = rest.post<{ user: Login }>(
-  `${process.env.NEXT_PUBLIC_API_ROOT}/users/login`,
-  (request, response, context) => {
-    if (request.body.user.password === 'password')
-      return response(
-        context.status(422),
-        context.json({
-          errors: {
-            'email or password': ['is invalid'],
-          },
-        } as ApiError),
-      );
-
-    return response(
-      context.status(200),
-      context.json({
-        user: userFactory.build(request.body.user),
-      } as AuthResponse),
-    );
-  },
-);
 const server = setupServer(loginHandler);
 
 describe('<LoginPage />', () => {
