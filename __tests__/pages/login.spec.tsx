@@ -1,20 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import faker from 'faker';
 import { setupServer } from 'msw/node';
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import type { NextRouter } from 'next/router';
-import { Provider } from 'react-redux';
+import { NextRouter } from 'next/router';
 
-import { Status } from '@app/common/types';
-import {
-  loginFactory,
-  loginHandler,
-  userFactory,
-} from '@app/features/auth/auth-mocks';
-import { constrains } from '@app/features/auth/signin-form';
+import { loginFactory, loginHandler } from '@app/features/auth/auth-mocks';
 import LoginPage from '@app/pages/login';
-import { makeStore } from '@app/store';
+import { render } from '@app/test-utils';
 
 const server = setupServer(loginHandler);
 
@@ -43,7 +34,7 @@ describe('<LoginPage />', () => {
   });
 
   afterEach(() => {
-    routerMocked.replace.mockReset();
+    routerMocked.push.mockReset();
   });
 
   afterAll(() => {
@@ -51,13 +42,7 @@ describe('<LoginPage />', () => {
   });
 
   it('should render', () => {
-    const { baseElement } = render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <LoginPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
+    const { baseElement } = render(<LoginPage />);
 
     expect(baseElement).toBeInTheDocument();
     expect(
@@ -65,35 +50,13 @@ describe('<LoginPage />', () => {
     ).toBeInTheDocument();
   });
 
-  it('should redirect if already logged', () => {
-    const { token, ...user } = userFactory.build();
-    const store = makeStore({ auth: { status: Status.SUCCESS, token, user } });
-
-    render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
-          <LoginPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
-
-    expect(routerMocked.replace).toHaveBeenCalledWith('/');
-  });
-
   it('should submit the form', async () => {
-    const data = loginFactory.build();
+    const data = { email: 'john@doe.me', password: 'Pa$$w0rd!' };
 
-    render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <LoginPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
+    render(<LoginPage />, { router: routerMocked });
 
     userEvent.type(screen.getByPlaceholderText(/email/i), data.email);
     userEvent.type(screen.getByPlaceholderText(/password/i), data.password);
-
     userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
@@ -102,53 +65,14 @@ describe('<LoginPage />', () => {
       ).not.toBeDisabled();
     });
 
-    expect(screen.queryByTestId('list-error-messages')).not.toBeInTheDocument();
-    expect(routerMocked.replace).toHaveBeenCalledTimes(1);
-  });
-
-  it('should show the validation error messages', async () => {
-    render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <LoginPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
-
-    userEvent.click(screen.getByRole('button', { name: /sign in/i }));
-
-    await expect(
-      screen.findByText(constrains.email.required),
-    ).resolves.toBeInTheDocument();
-    await expect(
-      screen.findByText(constrains.password.required),
-    ).resolves.toBeInTheDocument();
-
-    userEvent.type(screen.getByPlaceholderText(/email/i), faker.music.genre());
-    userEvent.type(
-      screen.getByPlaceholderText(/password/i),
-      faker.lorem.word(4),
-    );
-    userEvent.click(screen.getByRole('button', { name: /sign in/i }));
-
-    await expect(
-      screen.findByText(constrains.email.pattern.message),
-    ).resolves.toBeInTheDocument();
-    await expect(
-      screen.findByText(constrains.password.minLength.message),
-    ).resolves.toBeInTheDocument();
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
+    expect(routerMocked.push).toHaveBeenCalledTimes(1);
   });
 
   it('should list the errors', async () => {
-    const data = loginFactory.build({ password: 'password' });
+    const data = loginFactory.build();
 
-    render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <LoginPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
+    render(<LoginPage />);
 
     userEvent.type(screen.getByPlaceholderText(/email/i), data.email);
     userEvent.type(screen.getByPlaceholderText(/password/i), data.password);
@@ -161,7 +85,7 @@ describe('<LoginPage />', () => {
       ).not.toBeDisabled();
     });
 
-    expect(screen.getByTestId('list-error-messages')).toBeInTheDocument();
-    expect(routerMocked.replace).not.toHaveBeenCalled();
+    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(routerMocked.push).not.toHaveBeenCalled();
   });
 });

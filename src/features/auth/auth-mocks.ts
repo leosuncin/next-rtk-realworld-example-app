@@ -8,6 +8,10 @@ import type {
   Register,
 } from '@app/features/auth/auth-api';
 
+const emails = new Set(['john@doe.me', 'warren.boyd@mailinator.com']);
+const emailRegex =
+  /^[\w.!#$%&'*+\\/=?^`{|}~-]+@[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?(?:\.[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?)*$/;
+
 export const registerFactory = Factory.Sync.makeFactory<Register>({
   username: Factory.each(() => faker.internet.userName()),
   email: Factory.each(() => faker.internet.exampleEmail()),
@@ -38,8 +42,12 @@ export const registerHandler = rest.post<{ user: Register }>(
       errors.email = ["can't be blank"];
     }
 
-    if (!request.body.user.email.includes('@')) {
+    if (!emailRegex.test(request.body.user.email)) {
       errors.email = ['is invalid'];
+    }
+
+    if (emails.has(request.body.user.email)) {
+      errors.email = ['has already been taken'];
     }
 
     if (!request.body.user.password) {
@@ -82,7 +90,7 @@ export const loginHandler = rest.post<{ user: Login }>(
   `${process.env.NEXT_PUBLIC_API_ROOT}/users/login`,
   (request, response, context) => {
     if (
-      request.body.user.email === 'john@doe.me' ||
+      !emails.has(request.body.user.email) &&
       request.body.user.password !== 'Pa$$w0rd!'
     ) {
       return response(
