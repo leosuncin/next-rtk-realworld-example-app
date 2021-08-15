@@ -5,7 +5,7 @@ import { selectIsAuthenticated } from '@app/features/auth/auth.slice';
 import TagsSidebar from '@app/features/tags/tags-sidebar';
 import { useSelector } from '@app/store';
 
-const ArticlesLayout = ({ tab, tag }: FeedTabsProps) => {
+function ArticlesLayout({ tab, tag }: FeedTabsProps) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
@@ -27,6 +27,6 @@ const ArticlesLayout = ({ tab, tag }: FeedTabsProps) => {
       </main>
     </div>
   );
-};
+}
 
 export default ArticlesLayout;

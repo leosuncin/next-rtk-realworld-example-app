@@ -23,7 +23,7 @@ function ArticlesPagination() {
     return () => {
       fetchArticles.abort();
     };
-  }, [router]);
+  }, [router, dispatch, currentPage]);
 
   if (articlesCount <= articlesPerPage) {
     return null;
@@ -42,8 +42,8 @@ function ArticlesPagination() {
 
           return (
             <li
-              className={isActivePage ? 'page-item active' : 'page-item'}
               key={page}
+              className={isActivePage ? 'page-item active' : 'page-item'}
             >
               <NextLink href={`/?page=${page}`}>
                 <a className="page-link">

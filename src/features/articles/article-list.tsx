@@ -7,7 +7,7 @@ import {
 } from '@app/features/articles/articles.slice';
 import { useSelector } from '@app/store';
 
-const ArticleList = () => {
+function ArticleList() {
   const articles = useSelector(selectAllArticles);
   const isLoading = useSelector(selectIsLoading);
   const isSuccess = useSelector(selectIsSuccess);
@@ -23,12 +23,12 @@ const ArticleList = () => {
   return (
     <div className="tab-content">
       {articles.map((article) => (
-        <ArticlePreview article={article} key={article.slug} />
+        <ArticlePreview key={article.slug} article={article} />
       ))}
 
       <ArticlesPagination />
     </div>
   );
-};
+}
 
 export default ArticleList;

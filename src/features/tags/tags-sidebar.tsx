@@ -41,7 +41,7 @@ function TagsSidebar() {
         {isLoading ? (
           <p>Loading Tags...</p>
         ) : (
-          tags.map((tag) => <TagPill tag={tag} key={tag} />)
+          tags.map((tag) => <TagPill key={tag} tag={tag} />)
         )}
       </div>
     </div>

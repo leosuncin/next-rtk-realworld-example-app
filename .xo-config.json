@@ -2,6 +2,11 @@
   "space": true,
   "prettier": true,
   "envs": ["es2020", "node", "browser"],
+  "extends": [
+    "xo-react",
+    "plugin:@next/next/recommended",
+    "plugin:@next/next/core-web-vitals"
+  ],
   "overrides": [
     {
       "files": [
@@ -15,11 +20,25 @@
         "plugin:jest-formatting/strict",
         "plugin:testing-library/react"
       ]
+    },
+    {
+      "files": ["src/pages/*.tsx"],
+      "rules": {
+        "react/function-component-definition": [
+          "error",
+          { "namedComponents": "arrow-function" }
+        ]
+      }
     }
   ],
   "rules": {
     "node/prefer-global/process": "off",
     "unicorn/prefer-node-protocol": "off",
-    "@typescript-eslint/triple-slash-reference": "off"
+    "@typescript-eslint/triple-slash-reference": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/function-component-definition": [
+      "error",
+      { "namedComponents": "function-declaration" }
+    ]
   }
 }
