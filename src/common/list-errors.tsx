@@ -7,16 +7,16 @@ import { clearErrors } from '@app/store/shared.actions';
 function ListErrors({ errors }: Partial<ApiError>) {
   const dispatch = useDispatch();
 
-  if (!errors || Object.keys(errors).length === 0) {
-    return null;
-  }
-
   useEffect(
     () => () => {
       dispatch(clearErrors());
     },
     [dispatch],
   );
+
+  if (!errors || Object.keys(errors).length === 0) {
+    return null;
+  }
 
   const errorMessages = Object.entries(errors).flatMap(([property, messages]) =>
     messages.map((message) => `${property} ${message}`),
