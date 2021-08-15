@@ -101,7 +101,7 @@ function LoggedInNavbar() {
           >
             <img
               src={
-                currentUser.image ||
+                currentUser.image ??
                 'https://static.productionready.io/images/smiley-cyrus.jpg'
               }
               className="user-pic"

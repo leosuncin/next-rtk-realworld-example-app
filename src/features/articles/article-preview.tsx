@@ -11,7 +11,13 @@ function ArticlePreview({ article }: ArticlePreviewProps) {
     <article className="article-preview">
       <div className="article-meta">
         <NextLink href={`/@${article.author.username}`}>
-          <img src={article.author.image} />
+          <img
+            src={
+              article.author.image ??
+              'https://static.productionready.io/images/smiley-cyrus.jpg'
+            }
+            alt={article.author.username}
+          />
         </NextLink>
 
         <div className="info">
