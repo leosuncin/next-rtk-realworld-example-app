@@ -6,10 +6,10 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
+import { clearErrors } from '@app/common/actions';
 import { SliceState, Status } from '@app/common/types';
 import * as articlesApi from '@app/features/articles/articles-api';
 import type { AppState } from '@app/store';
-import { clearErrors } from '@app/store/shared.actions';
 
 export type Tab = 'feed' | 'all';
 

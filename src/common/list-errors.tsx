@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
+import { clearErrors } from '@app/common/actions';
 import type { ApiError } from '@app/common/types';
 import { useDispatch } from '@app/store';
-import { clearErrors } from '@app/store/shared.actions';
 
 function ListErrors({ errors }: Partial<ApiError>) {
   const dispatch = useDispatch();

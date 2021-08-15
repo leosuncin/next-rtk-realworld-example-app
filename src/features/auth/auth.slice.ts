@@ -5,6 +5,7 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
+import { clearErrors } from '@app/common/actions';
 import {
   FulfilledAction,
   PendingAction,
@@ -15,7 +16,6 @@ import {
 import { failureReducer, loadingReducer } from '@app/common/utils';
 import * as authApi from '@app/features/auth/auth-api';
 import type { AppState } from '@app/store';
-import { clearErrors } from '@app/store/shared.actions';
 
 export interface AuthState extends SliceState {
   user?: authApi.User;
