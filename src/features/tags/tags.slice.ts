@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import type { AppState } from '@app/app/store';
 import { SliceState, Status } from '@app/common/types';
 import { loadingReducer } from '@app/common/utils';
 import * as tagsApi from '@app/features/tags/tags-api';
-import type { AppState } from '@app/store';
 
 export interface TagsState extends SliceState, tagsApi.TagsResponse {}
 

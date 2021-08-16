@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react';
 import { createRouter } from 'next/router';
 
+import { makeStore } from '@app/app/store';
 import { Status } from '@app/common/types';
 import AuthLayout from '@app/features/auth/auth-layout';
 import { userFactory } from '@app/features/auth/auth-mocks';
-import { makeStore } from '@app/store';
 import { render } from '@app/test-utils';
 
 describe('<AuthLayout />', () => {

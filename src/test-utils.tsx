@@ -5,7 +5,7 @@ import type { NextRouter } from 'next/router';
 import { createRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
-import { makeStore } from '@app/store';
+import { makeStore } from '@app/app/store';
 
 function customRender(
   ui: Parameters<typeof render>[0],

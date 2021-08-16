@@ -1,11 +1,11 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
+import { useSelector } from '@app/app/hooks';
 import {
   selectIsAuthenticated,
   selectUser,
 } from '@app/features/auth/auth.slice';
-import { useSelector } from '@app/store';
 
 function LoggedOutNavbar() {
   const router = useRouter();

@@ -2,12 +2,12 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect } from 'react';
 
+import { useSelector } from '@app/app/hooks';
 import ListErrors from '@app/common/list-errors';
 import {
   selectErrors,
   selectIsAuthenticated,
 } from '@app/features/auth/auth.slice';
-import { useSelector } from '@app/store';
 
 export type AuthLayoutProps = {
   isRegister?: boolean;

@@ -1,12 +1,12 @@
 import NextLink from 'next/link';
 import { useEffect } from 'react';
 
+import { useDispatch, useSelector } from '@app/app/hooks';
 import {
   getAllTags,
   selectIsLoading,
   selectTags,
 } from '@app/features/tags/tags.slice';
-import { useDispatch, useSelector } from '@app/store';
 
 type TagPillProps = {
   tag: string;

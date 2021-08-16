@@ -1,6 +1,6 @@
 import type { AsyncThunk, SerializedError } from '@reduxjs/toolkit';
 
-import type { AppDispatch, AppState } from '@app/store';
+import type { AppDispatch, AppState } from '@app/app/store';
 
 export interface ApiError {
   errors: Record<string, string[]>;

@@ -1,3 +1,4 @@
+import { useSelector } from '@app/app/hooks';
 import ArticlePreview from '@app/features/articles/article-preview';
 import ArticlesPagination from '@app/features/articles/articles-pagination';
 import {
@@ -5,7 +6,6 @@ import {
   selectIsLoading,
   selectIsSuccess,
 } from '@app/features/articles/articles.slice';
-import { useSelector } from '@app/store';
 
 function ArticleList() {
   const articles = useSelector(selectAllArticles);

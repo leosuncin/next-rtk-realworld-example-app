@@ -2,13 +2,13 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+import { useDispatch, useSelector } from '@app/app/hooks';
 import { getCurrentPage } from '@app/common/utils';
 import {
   getAllArticles,
   selectArticlesCount,
   selectArticlesPerPage,
 } from '@app/features/articles/articles.slice';
-import { useDispatch, useSelector } from '@app/store';
 
 function ArticlesPagination() {
   const dispatch = useDispatch();

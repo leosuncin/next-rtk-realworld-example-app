@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 
+import { useDispatch } from '@app/app/hooks';
 import AuthLayout from '@app/features/auth/auth-layout';
 import { login } from '@app/features/auth/auth.slice';
 import SignInForm from '@app/features/auth/signin-form';
-import { useDispatch } from '@app/store';
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();

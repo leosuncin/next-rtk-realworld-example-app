@@ -1,6 +1,6 @@
+import { useSelector } from '@app/app/hooks';
 import type { Tab } from '@app/features/articles/articles.slice';
 import { selectIsAuthenticated } from '@app/features/auth/auth.slice';
-import { useSelector } from '@app/store';
 
 export type FeedTabsProps = {
   tab?: Tab;

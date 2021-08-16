@@ -11,13 +11,13 @@ import { RouterContext } from 'next/dist/shared/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
+import store from '@app/app/store';
 import type {
   Article,
   ArticlesResponse,
 } from '@app/features/articles/articles-api';
 import type { TagsResponse } from '@app/features/tags/tags-api';
 import IndexPage from '@app/pages/index';
-import store from '@app/store';
 
 const authorFactory = Factory.Sync.makeFactory<Article['author']>({
   bio: Factory.Sync.each(() => faker.name.jobDescriptor()),

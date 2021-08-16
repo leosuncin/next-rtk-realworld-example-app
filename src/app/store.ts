@@ -5,11 +5,6 @@ import {
   configureStore,
 } from '@reduxjs/toolkit';
 import {
-  TypedUseSelectorHook,
-  useDispatch as _useDispatch,
-  useSelector as _useSelector,
-} from 'react-redux';
-import {
   FLUSH,
   PAUSE,
   PERSIST,
@@ -67,11 +62,5 @@ const store = makeStore();
 export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
-
-export function useDispatch() {
-  return _useDispatch<AppDispatch>();
-}
-
-export const useSelector: TypedUseSelectorHook<AppState> = _useSelector;
 
 export default store;
