@@ -11,7 +11,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context';
 import type { NextRouter } from 'next/router';
 import { Provider } from 'react-redux';
 
-import store from '@app/app/store';
+import { makeStore } from '@app/app/store';
 import type {
   Article,
   ArticlesResponse,
@@ -96,7 +96,7 @@ describe('<IndexPage />', () => {
   it('should render', () => {
     const { baseElement } = render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <IndexPage />
         </Provider>
       </RouterContext.Provider>,
@@ -111,7 +111,7 @@ describe('<IndexPage />', () => {
   it('should list the articles', async () => {
     render(
       <RouterContext.Provider value={routerMocked}>
-        <Provider store={store}>
+        <Provider store={makeStore()}>
           <IndexPage />
         </Provider>
       </RouterContext.Provider>,

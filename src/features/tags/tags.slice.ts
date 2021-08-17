@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 
 import type { AppState } from '@app/app/store';
 import { SliceState, Status } from '@app/common/types';
@@ -27,6 +28,14 @@ const tagsSlice = createSlice({
       state.status = Status.SUCCESS;
       state.tags = action.payload;
     });
+
+    builder.addMatcher(
+      (action) => action.type === HYDRATE,
+      (state, action: PayloadAction<AppState>) => ({
+        ...state,
+        ...action.payload.tags,
+      }),
+    );
   },
 });
 

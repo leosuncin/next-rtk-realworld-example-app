@@ -1,10 +1,12 @@
 import {
   EntityState,
+  PayloadAction,
   Selector,
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 
 import type { AppState } from '@app/app/store';
 import { clearErrors } from '@app/common/actions';
@@ -60,6 +62,14 @@ const articlesSlice = createSlice({
     builder.addCase(clearErrors, (state) => {
       delete state.errors;
     });
+
+    builder.addMatcher(
+      (action) => action.type === HYDRATE,
+      (state, action: PayloadAction<AppState>) => ({
+        ...state,
+        ...action.payload.articles,
+      }),
+    );
   },
 });
 

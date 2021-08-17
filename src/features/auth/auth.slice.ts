@@ -1,9 +1,11 @@
 import {
   CaseReducer,
+  PayloadAction,
   createAsyncThunk,
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 
 import type { AppState } from '@app/app/store';
 import { clearErrors } from '@app/common/actions';
@@ -68,6 +70,13 @@ const authSlice = createSlice({
         (action): action is RejectedAction =>
           /auth\/.*\/rejected/.test(action.type),
         failureReducer,
+      )
+      .addMatcher(
+        (action) => action.type === HYDRATE,
+        (state, action: PayloadAction<AppState>) => ({
+          ...state,
+          ...action.payload.auth,
+        }),
       );
   },
 });

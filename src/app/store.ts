@@ -1,8 +1,11 @@
 import {
+  AnyAction,
   CombinedState,
   PreloadedState,
+  ThunkAction,
   configureStore,
 } from '@reduxjs/toolkit';
+import { createWrapper } from 'next-redux-wrapper';
 
 import articlesSlice, {
   ArticlesState,
@@ -30,8 +33,15 @@ export function makeStore(
   });
 }
 
-const store = makeStore();
+export type AppStore = ReturnType<typeof makeStore>;
 
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = AppStore['dispatch'];
 
-export default store;
+export type AppThunkAction<ReturnType = Promise<void>> = ThunkAction<
+  ReturnType,
+  AppState,
+  unknown,
+  AnyAction
+>;
+
+export const wrapper = createWrapper(() => makeStore());
