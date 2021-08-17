@@ -5,6 +5,11 @@ import {
   ThunkAction,
   configureStore,
 } from '@reduxjs/toolkit';
+import {
+  SERVE_COOKIES,
+  nextReduxCookieMiddleware,
+  wrapMakeStore,
+} from 'next-redux-cookie-wrapper';
 import { createWrapper } from 'next-redux-wrapper';
 
 import articlesSlice, {
@@ -30,6 +35,16 @@ export function makeStore(
       auth: authSlice,
     },
     preloadedState,
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [SERVE_COOKIES],
+        },
+      }),
+      nextReduxCookieMiddleware({
+        subtrees: [`auth.token`, 'auth.user'],
+      }),
+    ],
   });
 }
 
@@ -44,4 +59,4 @@ export type AppThunkAction<ReturnType = Promise<void>> = ThunkAction<
   AnyAction
 >;
 
-export const wrapper = createWrapper(() => makeStore());
+export const wrapper = createWrapper(wrapMakeStore(() => makeStore()));
