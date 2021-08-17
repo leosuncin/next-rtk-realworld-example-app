@@ -13,7 +13,7 @@ const emailRegex =
   /^[\w.!#$%&'*+\\/=?^`{|}~-]+@[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?(?:\.[a-zA-Z\d](?:[a-zA-Z\d-]{0,61}[a-zA-Z\d])?)*$/;
 
 export const registerFactory = Factory.Sync.makeFactory<Register>({
-  username: Factory.each(() => faker.internet.userName()),
+  username: Factory.each(() => faker.internet.userName().slice(-19)),
   email: Factory.each(() => faker.internet.exampleEmail()),
   password: Factory.each(() => faker.internet.password()),
 });

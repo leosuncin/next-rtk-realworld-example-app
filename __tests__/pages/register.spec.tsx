@@ -1,83 +1,51 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
-import type { NextRouter } from 'next/router';
+import { getPage } from 'next-page-tester';
+import Router from 'next/router';
 
+import { getAllHandler as getArticlesHandler } from '@app/features/articles/articles-mocks';
 import {
   registerFactory,
   registerHandler,
 } from '@app/features/auth/auth-mocks';
-import RegisterPage from '@app/pages/register';
-import { render } from '@app/test-utils';
+import { getAllHandler as getTagsHandler } from '@app/features/tags/tags-mocks';
 
-const server = setupServer(registerHandler);
+jest.mock('next/router', () => ({
+  __esModule: true,
+  ...jest.requireActual('next/router'),
+  default: {},
+}));
 
-describe('<RegisterPage />', () => {
-  const routerMocked: jest.Mocked<NextRouter> = {
-    pathname: '/register',
-    route: '/register',
-    isPreview: false,
-    query: {},
-    asPath: '/register',
-    basePath: '',
-    isFallback: false,
-    isReady: true,
-    isLocaleDomain: true,
-    events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-    push: jest.fn(),
-    replace: jest.fn(),
-    reload: jest.fn(),
-    back: jest.fn(),
-    prefetch: jest.fn().mockResolvedValue(undefined),
-    beforePopState: jest.fn(),
-  };
+const server = setupServer(registerHandler, getArticlesHandler, getTagsHandler);
 
+describe('Register page', () => {
   beforeAll(() => {
     server.listen();
-  });
-
-  afterEach(() => {
-    routerMocked.push.mockReset();
   });
 
   afterAll(() => {
     server.close();
   });
 
-  it('should render', () => {
-    const { baseElement } = render(<RegisterPage />);
+  it('should render', async () => {
+    const { render } = await getPage({ route: '/register' });
 
-    expect(baseElement).toBeInTheDocument();
+    render();
+
     expect(
       screen.getByRole('heading', { name: /sign up/i }),
     ).toBeInTheDocument();
   });
 
-  it('should submit the form', async () => {
-    const data = registerFactory.build();
-
-    render(<RegisterPage />, { router: routerMocked });
-
-    userEvent.type(screen.getByPlaceholderText(/username/i), data.username);
-    userEvent.type(screen.getByPlaceholderText(/email/i), data.email);
-    userEvent.type(screen.getByPlaceholderText(/password/i), data.password);
-
-    userEvent.click(screen.getByRole('button', { name: /sign up/i }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /sign up/i }),
-      ).not.toBeDisabled();
-    });
-
-    expect(screen.queryByRole('list')).not.toBeInTheDocument();
-    expect(routerMocked.push).toHaveBeenCalledTimes(1);
-  });
-
   it('should list the errors', async () => {
     const data = registerFactory.build({ email: 'john@doe.me' });
+    const { render } = await getPage({
+      route: '/register',
+      router: (router) => Object.assign(Router, router),
+    });
 
-    render(<RegisterPage />, { router: routerMocked });
+    render();
 
     userEvent.type(screen.getByPlaceholderText(/username/i), data.username);
     userEvent.type(screen.getByPlaceholderText(/email/i), data.email);
@@ -91,7 +59,41 @@ describe('<RegisterPage />', () => {
       ).not.toBeDisabled();
     });
 
-    expect(screen.getByRole('list')).toBeInTheDocument();
-    expect(routerMocked.push).not.toHaveBeenCalled();
+    expect(
+      within(screen.getByRole('main')).getByRole('list'),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('main')).getByRole('listitem'),
+    ).toHaveTextContent('email has already been taken');
+    expect(Router.pathname).toBe('/register');
+  });
+
+  it('should submit the form', async () => {
+    const data = registerFactory.build();
+    const { render } = await getPage({
+      route: '/register',
+      router: (router) => Object.assign(Router, router),
+    });
+
+    render();
+
+    userEvent.type(screen.getByPlaceholderText(/username/i), data.username);
+    userEvent.type(screen.getByPlaceholderText(/email/i), data.email);
+    userEvent.type(screen.getByPlaceholderText(/password/i), data.password);
+
+    userEvent.click(screen.getByRole('button', { name: /sign up/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /sign up/i }),
+      ).not.toBeDisabled();
+    });
+
+    expect(
+      screen.queryByRole('heading', {
+        name: 'conduit',
+      }),
+    ).not.toBeInTheDocument();
+    expect(Router.pathname).toBe('/index');
   });
 });
