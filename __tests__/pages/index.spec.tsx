@@ -1,90 +1,13 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
-import * as Factory from 'factory.ts';
-import * as faker from 'faker';
-import { rest } from 'msw';
+import { screen } from '@testing-library/react';
 import { setupServer } from 'msw/node';
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import type { NextRouter } from 'next/router';
-import { Provider } from 'react-redux';
+import { getPage } from 'next-page-tester';
 
-import { makeStore } from '@app/app/store';
-import type {
-  Article,
-  ArticlesResponse,
-} from '@app/features/articles/articles-api';
-import type { TagsResponse } from '@app/features/tags/tags-api';
-import IndexPage from '@app/pages/index';
+import { getAllHandler as getArticlesHandler } from '@app/features/articles/articles-mocks';
+import { getAllHandler as getTagsHandler } from '@app/features/tags/tags-mocks';
 
-const authorFactory = Factory.Sync.makeFactory<Article['author']>({
-  bio: Factory.Sync.each(() => faker.name.jobDescriptor()),
-  following: false,
-  image: Factory.Sync.each(() => faker.image.avatar()),
-  username: Factory.Sync.each(() => faker.internet.userName()),
-});
-const articleFactory = Factory.Sync.makeFactory<Article>({
-  title: Factory.each((i) => `Article title ${i}`),
-  slug: '',
-  body: Factory.each(() => faker.lorem.paragraph()),
-  createdAt: Factory.each(() => new Date().toISOString()),
-  updatedAt: Factory.each(() => new Date().toISOString()),
-  description: Factory.each(() => faker.lorem.lines()),
-  tagList: Factory.each(() => faker.lorem.words().split(/s+/)),
-  author: Factory.each(() => authorFactory.build()),
-  favorited: false,
-  favoritesCount: Factory.each(() => Math.floor(faker.random.number())),
-}).withDerivation1(['title'], 'slug', faker.helpers.slugify);
-const articles = articleFactory.buildList(10);
-const articlesHandler = rest.get<never, ArticlesResponse>(
-  `${process.env.NEXT_PUBLIC_API_ROOT}/articles`,
-  (_, response, context) =>
-    response(
-      context.status(200),
-      context.json({
-        articles,
-        articlesCount: articles.length,
-      }),
-    ),
-);
-const tagsHandler = rest.get<never, TagsResponse>(
-  `${process.env.NEXT_PUBLIC_API_ROOT}/tags`,
-  (_, response, context) => {
-    const tags = [
-      ...new Set(articles.flatMap((article) => article.tagList)),
-    ].slice(0, 10);
-    return response(
-      context.status(200),
-      context.json({
-        tags,
-      }),
-    );
-  },
-);
-const server = setupServer(articlesHandler, tagsHandler);
+const server = setupServer(getArticlesHandler, getTagsHandler);
 
-describe('<IndexPage />', () => {
-  const routerMocked: jest.Mocked<NextRouter> = {
-    pathname: '/',
-    route: '/',
-    isPreview: false,
-    query: {},
-    asPath: '/',
-    basePath: '',
-    isFallback: false,
-    isReady: true,
-    isLocaleDomain: true,
-    events: { emit: jest.fn(), off: jest.fn(), on: jest.fn() },
-    push: jest.fn(),
-    replace: jest.fn(),
-    reload: jest.fn(),
-    back: jest.fn(),
-    prefetch: jest.fn().mockResolvedValue(undefined),
-    beforePopState: jest.fn(),
-  };
-
+describe('Home page', () => {
   beforeAll(() => {
     server.listen();
   });
@@ -93,35 +16,13 @@ describe('<IndexPage />', () => {
     server.close();
   });
 
-  it('should render', () => {
-    const { baseElement } = render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <IndexPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
+  it('should render', async () => {
+    const { render } = await getPage({ route: '/' });
 
-    expect(baseElement).toBeInTheDocument();
+    render();
+
     expect(
       screen.getByText(/a place to share your knowledge/i),
     ).toBeInTheDocument();
-  });
-
-  it('should list the articles', async () => {
-    render(
-      <RouterContext.Provider value={routerMocked}>
-        <Provider store={makeStore()}>
-          <IndexPage />
-        </Provider>
-      </RouterContext.Provider>,
-    );
-
-    await waitForElementToBeRemoved(() =>
-      screen.getByText(/no articles are here/i),
-    );
-    await waitForElementToBeRemoved(() => screen.getByText(/loading tags/i));
-
-    expect(screen.getAllByRole('article')).toHaveLength(10);
   });
 });

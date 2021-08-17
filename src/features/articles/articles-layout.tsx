@@ -10,7 +10,7 @@ function ArticlesLayout({ tab, tag }: FeedTabsProps) {
 
   return (
     <div className="home-page">
-      {isAuthenticated && <Banner />}
+      {isAuthenticated ? null : <Banner />}
 
       <main className="container page">
         <div className="row">

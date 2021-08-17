@@ -13,11 +13,21 @@ function ArticleList() {
   const isSuccess = useSelector(selectIsSuccess);
 
   if (isLoading) {
-    return <div className="article-preview">Loading articles...</div>;
+    return (
+      <div className="tab-content">
+        <article className="article-preview">Loading articles...</article>
+      </div>
+    );
   }
 
   if (isSuccess && articles.length === 0) {
-    return <div className="article-preview">No articles are here... yet.</div>;
+    return (
+      <div className="tab-content">
+        <article className="article-preview">
+          No articles are here... yet.
+        </article>
+      </div>
+    );
   }
 
   return (
