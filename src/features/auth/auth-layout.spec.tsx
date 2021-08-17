@@ -1,11 +1,10 @@
 import { screen } from '@testing-library/react';
-import { createRouter } from 'next/router';
 
 import { makeStore } from '@app/app/store';
 import { Status } from '@app/common/types';
 import AuthLayout from '@app/features/auth/auth-layout';
 import { userFactory } from '@app/features/auth/auth-mocks';
-import { render } from '@app/test-utils';
+import { createMockRouter, render } from '@app/test-utils';
 
 describe('<AuthLayout />', () => {
   it('should render the login layout by default', () => {
@@ -57,15 +56,7 @@ describe('<AuthLayout />', () => {
         user,
       },
     });
-    const router = createRouter('/login', {}, '/login', {
-      subscription: jest.fn().mockImplementation(Promise.resolve),
-      initialProps: {},
-      pageLoader: jest.fn(),
-      Component: jest.fn(),
-      App: jest.fn(),
-      wrapApp: jest.fn(),
-      isFallback: false,
-    });
+    const router = createMockRouter('/login');
 
     jest.spyOn(router, 'push');
     render(<AuthLayout />, { router, store });
